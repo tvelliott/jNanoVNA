@@ -235,12 +235,20 @@ public class VNAFrame extends javax.swing.JFrame
       System.exit(0);
     }
 
-    if( nanoVNA_port.openPort(1000)==false) {
-      System.out.println("\r\ncould not open the nanoVNA device serial port. exiting.");
+    int retry=0;
+    for(retry=0;retry<20;retry++) {
+      if( nanoVNA_port.openPort(1000)==false) {
+        System.out.println("\r\ncould not open the nanoVNA device serial port. exiting. retry...");
+      } else {
+        nanoVNA_port.setBaudRate( 2000000 ); //this probably doesn't really matter
+        nanoVNA_port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 1000, 0);
+        break;
+      }
+    }
+
+    if(retry==5) {
+      System.out.println("\r\ncould not open the nanoVNA device serial port. exiting. retry...");
       System.exit(0);
-    } else {
-      nanoVNA_port.setBaudRate( 2000000 ); //this probably doesn't really matter
-      nanoVNA_port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 1000, 0);
     }
 
 
