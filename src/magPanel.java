@@ -55,7 +55,8 @@ public class magPanel extends JPanel
   int inset3 = (int) (inset1);
   int inset4 = (int) (inset1*2);
   Line2D.Double l2d=null;
-  double[] mags;
+  double[] mags_s11;
+  double[] mags_s21;
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -75,13 +76,25 @@ public class magPanel extends JPanel
   {
     if(freq==null || freq.length==0) return;
     freq_mhz = freq;
-    mags = mag;
-    for(int i=0; i<mags.length; i++) {
-      mags[i] -= 10.0;  //adjust for nanoVNA output
+    mags_s11 = mag;
+    for(int i=0; i<mags_s11.length; i++) {
+      mags_s11[i] -= 10.0;  //adjust for nanoVNA output
     }
     repaint();
   }
 
+///////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
+  public void plotS21(double freq[], double[] mag)
+  {
+    if(freq==null || freq.length==0) return;
+    freq_mhz = freq;
+    mags_s21 = mag;
+    for(int i=0; i<mags_s21.length; i++) {
+      mags_s21[i] -= 10.0;  //adjust for nanoVNA output
+    }
+    repaint();
+  }
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -135,7 +148,6 @@ public class magPanel extends JPanel
     bgr = new Rectangle2D.Double(1,1,w-2,h-2);
     g2d.draw(bgr);
 
-    if(mags==null) return;
 
     double yt = inset1;
     double yb = h-inset1;
@@ -153,11 +165,11 @@ public class magPanel extends JPanel
     int len = freq_mhz.length;
 
 
-    for(int j=0; j<len; j++) {
-      if(mags[j]<min) min = mags[j];
-    }
+    //for(int j=0; j<len; j++) {
+     // if(mags_s11[j]<min) min = mags_s11[j];
+    //}
 
-    min = -90.0; //fixed min
+    min = -100.0; //fixed min
 
     //auto-range y-axis for dB mag
     //double modval = min;
@@ -254,26 +266,59 @@ public class magPanel extends JPanel
     g2d.drawString("S11 _____", 50,50);
 
 
+    if(mags_s11!=null) { 
 
-    for(int i=0; i<len; i++) {
-      double mag = mags[i];
+      for(int i=0; i<len; i++) {
+        double mag = mags_s11[i];
 
-      double slope = (yt-yb) / (0.0-modmin);
-      double intercept = ((yt+yb)/2.0) - (slope * ((0.0+modmin)/2.0));
+        double slope = (yt-yb) / (0.0-modmin);
+        double intercept = ((yt+yb)/2.0) - (slope * ((0.0+modmin)/2.0));
 
-      mag *= slope;
-      mag += intercept;
+        mag *= slope;
+        mag += intercept;
 
-      double x = inset1 + (freq_mhz[i]/freq_mhz[len-1]) * (w-inset2);
-      double y = mag+3; //3 offset to get it on the grid line
+        double x = inset1 + (freq_mhz[i]/freq_mhz[len-1]) * (w-inset2);
+        double y = mag+3; //3 offset to get it on the grid line
 
-      if(px>0) {
-        l2d = new Line2D.Double( (double) px, (double) py, (double) x, (double) y);
-        g2d.draw(l2d);
+        if(px>0) {
+          l2d = new Line2D.Double( (double) px, (double) py, (double) x, (double) y);
+          g2d.draw(l2d);
+        }
+        px = x;
+        py = y;
       }
-      px = x;
-      py = y;
     }
+
+    g2d.setPaint(Color.red);
+    g2d.drawString("S21 _____", 50,70);
+    //draw lines last
+    px=0.0;
+    py=0.0;
+
+    if(mags_s21!=null) { 
+
+      for(int i=0; i<len; i++) {
+        double mag = mags_s21[i];
+
+        double slope = (yt-yb) / (0.0-modmin);
+        double intercept = ((yt+yb)/2.0) - (slope * ((0.0+modmin)/2.0));
+
+        mag *= slope;
+        mag += intercept;
+
+        double x = inset1 + (freq_mhz[i]/freq_mhz[len-1]) * (w-inset2);
+        double y = mag+3; //3 offset to get it on the grid line
+
+        if(px>0) {
+          l2d = new Line2D.Double( (double) px, (double) py, (double) x, (double) y);
+          g2d.draw(l2d);
+        }
+        px = x;
+        py = y;
+      }
+    }
+
+
   }
 
 }
