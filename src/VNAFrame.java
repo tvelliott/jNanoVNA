@@ -246,8 +246,8 @@ public class VNAFrame extends javax.swing.JFrame
       }
     }
 
-    if(retry==5) {
-      System.out.println("\r\ncould not open the nanoVNA device serial port. exiting. retry...");
+    if(retry==20) {
+      System.out.println("\r\ncould not open the nanoVNA device serial port after 20 retries. exiting.");
       System.exit(0);
     }
 
