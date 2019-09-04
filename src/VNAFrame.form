@@ -139,7 +139,6 @@
             <Component class="javax.swing.JCheckBox" name="do_write_s2p">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Write s2p touchstone"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
           </SubComponents>

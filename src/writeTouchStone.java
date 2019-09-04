@@ -26,13 +26,19 @@ SOFTWARE.
 
 import java.io.*;
 
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
 public class writeTouchStone
 {
 
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
   public writeTouchStone()
   {
   }
 
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
   public void write1p(double[] freq_mhz, double[] data_real, double[] data_imag)
   {
     try {
@@ -41,15 +47,39 @@ public class writeTouchStone
 
       pw.println("! NanoVNA S11 output"); 
       pw.println("! Frequency       S11");
-      pw.println("# MHz  S  RI R  50");
+      pw.println("# Hz  S  RI R  50");
 
       for(int i=0; i<freq_mhz.length; i++) {
-        pw.println( String.format("%3.3f   %3.3f   %3.3f", new Double(freq_mhz[i]).doubleValue()/1e6, data_imag[i], data_real[i]) );
+        pw.println( String.format("%3.6f   %3.6f   %3.6f", new Double(freq_mhz[i]).doubleValue(), data_real[i], data_imag[i]) );
       }
 
       pw.close();
     } catch(Exception e) {
       e.printStackTrace();
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public void write2p(double[] freq_mhz, double[] data_real_s11, double[] data_imag_s11, double[] data_real_s21, double[] data_imag_s21)
+  {
+    try {
+      File file = new File("./nanovna.s2p");
+      PrintWriter pw = new PrintWriter(file);
+
+      pw.println("! NanoVNA S11/S21 output"); 
+      pw.println("! Frequency       S11                S21                S12                S22");
+      pw.println("# Hz  S  RI R  50");
+
+      for(int i=0; i<freq_mhz.length; i++) {
+        pw.println( String.format("%3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f", new Double(freq_mhz[i]).doubleValue(),
+            data_real_s11[i], data_imag_s11[i], data_real_s21[i], data_imag_s21[i], 
+            data_real_s11[i], data_imag_s11[i], data_real_s21[i], data_imag_s21[i])
+          );
+      }
+
+      pw.close();
+    } catch(Exception e) {
     }
   }
 

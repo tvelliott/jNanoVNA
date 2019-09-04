@@ -41,6 +41,11 @@ public class VNAFrame extends javax.swing.JFrame
   int plot_count=0;
   private javax.swing.JLabel count_label;
 
+  double[] real_s11;
+  double[] imag_s11;
+  double[] real_s21;
+  double[] imag_s21;
+
   /////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////
   class updateTask extends java.util.TimerTask
@@ -113,8 +118,6 @@ public class VNAFrame extends javax.swing.JFrame
       e.printStackTrace();
     }
 
-    double real[] = new double[101];
-    double imag[] = new double[101];
 
     if(len==8) {
 
@@ -152,6 +155,9 @@ public class VNAFrame extends javax.swing.JFrame
       int line=0;
       int data_lines=0;
 
+      double real[] = new double[101];
+      double imag[] = new double[101];
+
       while( st.hasMoreTokens() ) {
         String str1 = new String( st.nextToken() );
         System.out.println(line +" "+str1);
@@ -163,10 +169,10 @@ public class VNAFrame extends javax.swing.JFrame
           if(st2.countTokens()==2) {
             real[line-1] = new Double( st2.nextToken() ).doubleValue();
             imag[line-1] = new Double( st2.nextToken() ).doubleValue();
-            if(real[line-1] > 1.0) real[line-1]=1.0;
-            if(real[line-1] < -1.0) real[line-1]=-1.0;
-            if(imag[line-1] > 1.0) imag[line-1]=1.0;
-            if(imag[line-1] < -1.0) imag[line-1]=-1.0;
+            //if(real[line-1] > 1.0) real[line-1]=1.0;
+            //if(real[line-1] < -1.0) real[line-1]=-1.0;
+            //if(imag[line-1] > 1.0) imag[line-1]=1.0;
+            //if(imag[line-1] < -1.0) imag[line-1]=-1.0;
             data_lines++;
           }
         }
@@ -182,6 +188,25 @@ public class VNAFrame extends javax.swing.JFrame
       double[] freqs = new double[101];
       double[] mag = new double[101];
 
+      if(data_type==0) {
+        real_s11 = new double[101];
+        imag_s11 = new double[101];
+
+        for(i=0; i<101; i++) {
+          real_s11[i] = real[i];
+          imag_s11[i] = imag[i];
+        }
+      }
+      if(data_type==1) {
+        real_s21 = new double[101];
+        imag_s21 = new double[101];
+
+        for(i=0; i<101; i++) {
+          real_s21[i] = real[i];
+          imag_s21[i] = imag[i];
+        }
+      }
+
       for(i=0; i<101; i++) {
         freqs[i] = 50e3 + freq_step*i;
         mag[i] = 20.0 * java.lang.Math.log10( java.lang.Math.pow( real[i]*real[i] + imag[i]*imag[i], 0.5) );
@@ -194,7 +219,8 @@ public class VNAFrame extends javax.swing.JFrame
         if(data_type==0) mag_plot.plotS11(freqs, mag);
         if(data_type==1) mag_plot.plotS21(freqs, mag);
 
-        if(data_type==0 && do_write_s1p.isSelected() ) touchstone.write1p(freqs, real, imag); //write touchstone s1p to current dir 
+        if(data_type==0 && do_write_s1p.isSelected() && real_s11!=null) touchstone.write1p(freqs, real_s11, imag_s11); //write touchstone s1p to current dir 
+        if(data_type==1 && do_write_s2p.isSelected() && real_s11!=null && real_s21!=null) touchstone.write2p(freqs, real_s11, imag_s11, real_s21, imag_s21); //write touchstone s1p to current dir 
 
         plot_count++;
         count_label.setText(" plot iteration: "+plot_count);
@@ -344,7 +370,6 @@ public class VNAFrame extends javax.swing.JFrame
         jPanel5.add(do_write_s1p);
 
         do_write_s2p.setText("Write s2p touchstone");
-        do_write_s2p.setEnabled(false);
         jPanel5.add(do_write_s2p);
 
         jPanel1.add(jPanel5);
