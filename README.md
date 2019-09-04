@@ -1,5 +1,5 @@
 # jNanoVNA
-Plot S11 on Smith chart and log/mag plot from the serial interface of the NanoVNA device.
+Plot S11/S21 on Smith chart and log/mag plot from the serial interface of the NanoVNA device.
 <BR>
 
 <BR>Starting the app:
