@@ -12,6 +12,7 @@ public class VNAFrame extends javax.swing.JFrame
   SerialPort nanoVNA_port;
   java.util.Timer utimer;
   smithChartPanel smith_panel;
+  writeTouchStone touchstone;
   magPanel mag_plot;
   int plot_count=0;
   private javax.swing.JLabel count_label;
@@ -164,6 +165,7 @@ public class VNAFrame extends javax.swing.JFrame
       if(data_lines==101) {
         smith_panel.plotS11(freqs, real, imag);
         mag_plot.plotS11(freqs, mag);
+        touchstone.write1p(freqs, real, imag); //write touchstone s1p to current dir 
         plot_count++;
         count_label.setText(" plot iteration: "+plot_count);
       }
@@ -185,6 +187,7 @@ public class VNAFrame extends javax.swing.JFrame
 
     smith_panel = new smithChartPanel();
     mag_plot = new magPanel();
+    touchstone = new writeTouchStone();
 
     jTabbedPane1.addTab("Smith Chart", smith_panel);
     jTabbedPane1.addTab("Mag Plot", mag_plot);
@@ -208,7 +211,7 @@ public class VNAFrame extends javax.swing.JFrame
       System.exit(0);
     }
 
-    if( nanoVNA_port.openPort(500)==false) {
+    if( nanoVNA_port.openPort(1000)==false) {
       System.out.println("\r\ncould not open the nanoVNA device serial port. exiting.");
       System.exit(0);
     } else {
