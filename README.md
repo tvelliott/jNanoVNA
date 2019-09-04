@@ -3,10 +3,11 @@ Plot S11 on Smith chart and log/mag plot from the serial interface of the NanoVN
 <BR>
 
 <BR>Starting the app:
-
-<BR>git clone https://github.com/tvelliott/jNanoVNA.git
-<BR>cd jNanoVNA
-<BR>java -jar dist/jNanoVNA.jar 
+<BR>
+<BR>1) plug the NanoVNA device into a USB interface for enumeration
+<BR>2) git clone https://github.com/tvelliott/jNanoVNA.git
+<BR>3) cd jNanoVNA
+<BR>4) java -jar dist/jNanoVNA.jar 
 
 <BR>
 <BR>Building the app:
