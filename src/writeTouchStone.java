@@ -68,13 +68,13 @@ public class writeTouchStone
       PrintWriter pw = new PrintWriter(file);
 
       pw.println("! NanoVNA S11/S21 output"); 
-      pw.println("! Frequency       S11                S21                S12                S22");
+      pw.println("! Frequency       S11                S21                S21                S11");
       pw.println("# Hz  S  RI R  50");
 
       for(int i=0; i<freq_mhz.length; i++) {
         pw.println( String.format("%3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f   %3.6f", new Double(freq_mhz[i]).doubleValue(),
             data_real_s11[i], data_imag_s11[i], data_real_s21[i], data_imag_s21[i], 
-            data_real_s11[i], data_imag_s11[i], data_real_s21[i], data_imag_s21[i])
+            data_real_s21[i], data_imag_s21[i], data_real_s11[i], data_imag_s11[i])
           );
       }
 
