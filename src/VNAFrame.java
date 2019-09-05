@@ -28,6 +28,10 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 public class VNAFrame extends javax.swing.JFrame
@@ -45,6 +49,7 @@ public class VNAFrame extends javax.swing.JFrame
   double[] imag_s11;
   double[] real_s21;
   double[] imag_s21;
+  double[] freqs;
 
   /////////////////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////////////////
@@ -59,6 +64,7 @@ public class VNAFrame extends javax.swing.JFrame
           //do sweep to update plots
           if(do_plot_s11.isSelected()) getData(0); //S11
           if(do_plot_s21.isSelected()) getData(1); //S21
+
         }
       } catch(Exception e) {
         e.printStackTrace(System.out);
@@ -188,7 +194,7 @@ public class VNAFrame extends javax.swing.JFrame
       double freq = 50e3;
       double freq_step = ((900e6-50e3)/100.0);
       i=0;
-      double[] freqs = new double[101];
+      freqs = new double[101];
       double[] mag = new double[101];
 
       if(data_type==0) {
@@ -222,11 +228,10 @@ public class VNAFrame extends javax.swing.JFrame
         if(data_type==0) mag_plot.plotS11(freqs, mag);
         if(data_type==1) mag_plot.plotS21(freqs, mag);
 
-        if(data_type==0 && do_write_s1p.isSelected() && real_s11!=null) touchstone.write1p(freqs, real_s11, imag_s11); //write touchstone s1p to current dir 
-        if(data_type==1 && do_write_s2p.isSelected() && real_s11!=null && real_s21!=null) touchstone.write2p(freqs, real_s11, imag_s11, real_s21, imag_s21); //write touchstone s1p to current dir 
 
         plot_count++;
         count_label.setText(" plot iteration: "+plot_count);
+        if(plot_count%8==0) status.setText("Status: ");
       }
 
     }
@@ -314,6 +319,8 @@ public class VNAFrame extends javax.swing.JFrame
         do_plot_s21 = new javax.swing.JCheckBox();
         do_write_s1p = new javax.swing.JCheckBox();
         do_write_s2p = new javax.swing.JCheckBox();
+        genFiles = new javax.swing.JButton();
+        status = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("jNanoVNA");
@@ -321,7 +328,7 @@ public class VNAFrame extends javax.swing.JFrame
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         getContentPane().add(jPanel3, java.awt.BorderLayout.NORTH);
 
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(800, 600));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(1024, 768));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -331,7 +338,7 @@ public class VNAFrame extends javax.swing.JFrame
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 708, Short.MAX_VALUE)
+            .addGap(0, 706, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("tab1", jPanel2);
@@ -370,6 +377,17 @@ public class VNAFrame extends javax.swing.JFrame
         do_write_s2p.setText("Write s2p touchstone");
         jPanel5.add(do_write_s2p);
 
+        genFiles.setText("Gen Files");
+        genFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genFilesActionPerformed(evt);
+            }
+        });
+        jPanel5.add(genFiles);
+
+        status.setText("Status:");
+        jPanel5.add(status);
+
         jPanel1.add(jPanel5);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
@@ -380,6 +398,54 @@ public class VNAFrame extends javax.swing.JFrame
   private void sweep_toggleActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sweep_toggleActionPerformed
   {
   }//GEN-LAST:event_sweep_toggleActionPerformed
+
+    private void genFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genFilesActionPerformed
+      saveImage();
+    }//GEN-LAST:event_genFilesActionPerformed
+
+
+
+  private void saveImage(){
+    BufferedImage imagebuf=null;
+
+    //mag plot
+    try {
+      imagebuf = new Robot().createScreenCapture(mag_plot.bounds());
+    } catch (AWTException e1) {
+      e1.printStackTrace();
+    }  
+    Graphics2D graphics2D = imagebuf.createGraphics();
+    mag_plot.paint(graphics2D);
+    try {
+      ImageIO.write(imagebuf,"png", new File("mag_plot.png"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    //smith plot
+    try {
+      imagebuf = new Robot().createScreenCapture(smith_panel.bounds());
+    } catch (AWTException e1) {
+      e1.printStackTrace();
+    }  
+    graphics2D = imagebuf.createGraphics();
+    smith_panel.paint(graphics2D);
+    try {
+      ImageIO.write(imagebuf,"png", new File("smith_panel.png"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    //write touchstone files
+    try {
+      if(do_write_s1p.isSelected() && real_s11!=null) touchstone.write1p(freqs, real_s11, imag_s11); //write touchstone s1p to current dir 
+      if(do_write_s2p.isSelected() && real_s11!=null && real_s21!=null) touchstone.write2p(freqs, real_s11, imag_s11, real_s21, imag_s21); //write touchstone s1p to current dir 
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    status.setText("Status: Save files to current dir.");
+  }
 
   public static void main(String args[])
   {
@@ -419,6 +485,7 @@ public class VNAFrame extends javax.swing.JFrame
     private javax.swing.JCheckBox do_plot_s21;
     private javax.swing.JCheckBox do_write_s1p;
     private javax.swing.JCheckBox do_write_s2p;
+    private javax.swing.JButton genFiles;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -426,6 +493,7 @@ public class VNAFrame extends javax.swing.JFrame
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel status;
     private javax.swing.JToggleButton sweep_toggle;
     // End of variables declaration//GEN-END:variables
 }

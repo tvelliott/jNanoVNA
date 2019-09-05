@@ -1,3 +1,8 @@
 /build/
 nbproject/private
 *.out
+mag_plot.png
+smith_panel.png
+nanovna.s1p
+nanovna.s2p
+dist/README.TXT

@@ -66,7 +66,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="708" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="706" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -130,6 +130,19 @@
             <Component class="javax.swing.JCheckBox" name="do_write_s2p">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Write s2p touchstone"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="genFiles">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Gen Files"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genFilesActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="status">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Status:"/>
               </Properties>
             </Component>
           </SubComponents>
