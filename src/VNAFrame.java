@@ -173,11 +173,6 @@ public class VNAFrame extends javax.swing.JFrame
               real[line-1] = new Double( st2.nextToken() ).doubleValue();
               imag[line-1] = new Double( st2.nextToken() ).doubleValue();
 
-              if(real[line-1] > 1.0) real[line-1]=1.0;
-              if(real[line-1] < -1.0) real[line-1]=-1.0;
-              if(imag[line-1] > 1.0) imag[line-1]=1.0;
-              if(imag[line-1] < -1.0) imag[line-1]=-1.0;
-            
               data_lines++;
             } catch(Exception e) {
               e.printStackTrace();
