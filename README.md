@@ -1,6 +1,9 @@
 # jNanoVNA
 Plot s-parameters on Smith chart and log/mag plot from the USB serial interface of the NanoVNA device.
 <BR>
+<BR>
+Only tested on Linux, but should run on Windows, Mac, etc.
+<BR><BR>
 
 <BR>Starting the app:
 <BR>
