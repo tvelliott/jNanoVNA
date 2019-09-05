@@ -15,7 +15,7 @@ Plot s-parameters on Smith chart and log/mag plot from the USB serial interface 
 <BR>2) After that, you can make edits and type 'ant jar' to rebuild the dist dir from the project dir.
 <BR>   
 <BR>
-<img src="https://github.com/tvelliott/jNanoVNA/blob/master/images/jnanovna_s11_s21_bandpass.png">
+<img src="https://github.com/tvelliott/jNanoVNA/blob/master/images/jnanovna_bandpass_mag.png">
 <BR>   
 <img src="https://github.com/tvelliott/jNanoVNA/blob/master/images/jnanovna_bandpass_smith.png">
 
