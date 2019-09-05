@@ -167,13 +167,21 @@ public class VNAFrame extends javax.swing.JFrame
           String toki="";
           StringTokenizer st2 = new StringTokenizer(str1," ");
           if(st2.countTokens()==2) {
-            real[line-1] = new Double( st2.nextToken() ).doubleValue();
-            imag[line-1] = new Double( st2.nextToken() ).doubleValue();
-            //if(real[line-1] > 1.0) real[line-1]=1.0;
-            //if(real[line-1] < -1.0) real[line-1]=-1.0;
-            //if(imag[line-1] > 1.0) imag[line-1]=1.0;
-            //if(imag[line-1] < -1.0) imag[line-1]=-1.0;
-            data_lines++;
+
+            try {
+
+              real[line-1] = new Double( st2.nextToken() ).doubleValue();
+              imag[line-1] = new Double( st2.nextToken() ).doubleValue();
+
+              if(real[line-1] > 1.0) real[line-1]=1.0;
+              if(real[line-1] < -1.0) real[line-1]=-1.0;
+              if(imag[line-1] > 1.0) imag[line-1]=1.0;
+              if(imag[line-1] < -1.0) imag[line-1]=-1.0;
+            
+              data_lines++;
+            } catch(Exception e) {
+              e.printStackTrace();
+            }
           }
         }
 
@@ -300,7 +308,6 @@ public class VNAFrame extends javax.swing.JFrame
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -314,13 +321,9 @@ public class VNAFrame extends javax.swing.JFrame
         do_write_s2p = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("jNanoVNA");
 
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel1.setText("jNanoVNA,  alpha 0.1, 2019");
-        jPanel3.add(jLabel1);
-
         getContentPane().add(jPanel3, java.awt.BorderLayout.NORTH);
 
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(800, 600));
@@ -333,7 +336,7 @@ public class VNAFrame extends javax.swing.JFrame
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 686, Short.MAX_VALUE)
+            .addGap(0, 708, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("tab1", jPanel2);
@@ -421,7 +424,6 @@ public class VNAFrame extends javax.swing.JFrame
     private javax.swing.JCheckBox do_plot_s21;
     private javax.swing.JCheckBox do_write_s1p;
     private javax.swing.JCheckBox do_write_s2p;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
