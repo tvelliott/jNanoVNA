@@ -239,8 +239,10 @@ public class VNAFrame extends javax.swing.JFrame
 
   //////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////
-  public VNAFrame()
+  public VNAFrame(String[] args)
   {
+
+    System.out.println("args len: "+args.length);
 
     initComponents();
 
@@ -256,6 +258,11 @@ public class VNAFrame extends javax.swing.JFrame
     jTabbedPane1.addTab("Smith Chart", smith_panel);
     jTabbedPane1.addTab("Mag Plot", mag_plot);
 
+    String user_port="";
+    if(args.length>0) {
+      user_port = args[0];
+      System.out.println("user port: "+user_port);
+    }
 
     //find the serial port or exit
     SerialPort[] ports = SerialPort.getCommPorts();
@@ -263,7 +270,7 @@ public class VNAFrame extends javax.swing.JFrame
       System.out.println("\r\nport: "+ports[i]);
       System.out.println("\r\nport device: "+ports[i].getSystemPortName());
 
-      if( ports[i].toString().startsWith("ChibiOS/RT Virtual COM Port") ) { //we are looking for this string in the serial port description
+      if( ports[i].toString().startsWith("ChibiOS/RT Virtual COM Port") || (user_port.length()>0 && ports[i].getSystemPortName().contains(user_port)) ) { //we are looking for this string in the serial port description
         nanoVNA_port = ports[i];
         System.out.println("\r\nfound nanoVNA serial port on device: "+ports[i].getSystemPortName());
         jLabel2.setText("Using serial port named: "+ports[i].getSystemPortName());
@@ -272,6 +279,7 @@ public class VNAFrame extends javax.swing.JFrame
 
     if( nanoVNA_port==null ) {
       System.out.println("\r\ncould not find the nanoVNA device serial port. exiting.");
+      System.out.println("\r\ntry starting with specific port: example 'java -jar dist/jNanoVNA ttyACM1'");
       System.exit(0);
     }
 
@@ -288,6 +296,7 @@ public class VNAFrame extends javax.swing.JFrame
 
     if(retry==20) {
       System.out.println("\r\ncould not open the nanoVNA device serial port after 20 retries. exiting.");
+      System.out.println("\r\ntry starting with specific port: example 'java -jar dist/jNanoVNA ttyACM1'");
       System.exit(0);
     }
 
@@ -475,7 +484,7 @@ public class VNAFrame extends javax.swing.JFrame
     /* Create and display the form */
     java.awt.EventQueue.invokeLater(new Runnable() {
       public void run() {
-        new VNAFrame().setVisible(true);
+        new VNAFrame(args).setVisible(true);
       }
     });
   }
