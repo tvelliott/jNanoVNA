@@ -179,12 +179,14 @@ public class smithChartPanel extends JPanel implements Runnable
         double imag = data_imag[i];
         double x = real * hw * scale_factor;
         double y = imag * hh * scale_factor;
+
+
         y *= -1.0;
         x+=cx;
         y+=cy;
 
         if(px>0) {
-          l2d = new Line2D.Double( (double) px, (double) py, (double) x, (double) y);
+          l2d = new Line2D.Double( (double) x, (double) y, (double) px, (double) py);
           g2d.draw(l2d);
         }
         px = x;
